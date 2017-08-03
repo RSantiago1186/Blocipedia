@@ -1,27 +1,44 @@
-require 'random_data'
+include Faker
+require 'user_data'
 
-5.times do 
-    user= User.new(
-        email: RandomData.random_email,
-        password: "password",
-        role: "standard"
-        )
-    user.save!
+#Create first user
+1.times do
+  User.create!(
+  name: "Brian",
+  email: "briandelacruz@gmail.com",
+  password: "password"
+  )
 end
+brian = User.first
 
+#Create users with faker
+10.times do
+  User.create!(
+  email: Faker::Internet.email,
+  password: Faker::Internet.password
+  )
+end
 users = User.all
 
-10.times do
-    Wiki.create!(
-        title: RandomData.random_sentence,
-        body: RandomData.random_paragraph,
-        private: false,
-        user: User.last
-        )
+#Create Wikis
+25.times do
+  Wiki.create!(
+  title: Faker::Lorem.sentence,
+  body: Faker::Lorem.paragraph
+  )
 end
-
 wikis = Wiki.all
 
+#Create private Wikis
+25.times do
+  Wiki.create!(
+  title: Faker::Lorem.sentence,
+  body: Faker::Lorem.paragraph,
+  private: true,
+  user: users.sample
+  )
+end
+
 puts "Seed finished"
-puts "#{users.count} users created"
-puts "#{wikis.count} wikis created"
+puts "#{User.count} users created"
+puts "#{Wiki.count} wikis created"
